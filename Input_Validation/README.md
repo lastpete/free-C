@@ -8,4 +8,5 @@ All comments and variable names have changed as requested by the teacher who pro
 
 ## compile and run
 	```c
-	<COMPILED_PROGRAM>.exe input1.txt input2.txt```
+	<COMPILED_PROGRAM>.exe input1.txt input2.txt
+	```
