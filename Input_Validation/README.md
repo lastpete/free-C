@@ -7,6 +7,5 @@ After the first menu selection, I really enjoyed figuring out how I could saniti
 All comments and variable names have changed as requested by the teacher who provided the assignment. Sorry if it is confusing.
 
 ## compile and run
-	```c
 	<COMPILED_PROGRAM>.exe input1.txt input2.txt
-	```
+	
