@@ -1,16 +1,19 @@
-# Strings / Floss
-Just a quick filter for a Strings / Floss output file.
+# Strings / Floss Parser
+Just a quick filter for a Strings / Floss. `sys_parser.c` runs either Strings or Floss against the submitted file and filters the output based on CMD-line input by calling to `popen()`.
 
 > Compile:
-> `gcc -o <EXE> str_parser.c api.c`
+> `gcc -o sys.exe sys_parser.c api.c`
 
 > Run:
-> `<EXE> <Strings/Floss>.txt -api | <SEARCH_TERM>`
+> `sys.exe {strings | floss} <ABSOLUTE_PATH_TO_FILE> {-api | <SEARCH_TERM>}`
 > * `-api` filters for common API, list from [Malapi.io](https://malapi.io).
-> * `<SEARCH_TERM>` filters for strings that start with user submitted search criteria
+> * `<SEARCH_TERM>` filters for strings that start with user submitted search criteria.
 
->Example:
-> * str\_parse.exe input\_file.txt APICallFunc
+>Example 1:
+> * `sys.exe strings C:\Windows\malicious.exe __`
+
+>Example 2:
+> * `sys.exe floss C:\Windows\malicious.exe -api`
 
 ## // TODO
 * Add all Win32 api functions.............

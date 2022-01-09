@@ -13,31 +13,38 @@ int main(int argc, char *argv[])
 	/* Check for parameters */
 	if (argc < 3)
 	{
-		printf("%s", "SYNTAX ERROR: str_parser.exe <ABSOLUTE PATH TO INPUT FILE>.<EXT> <SEARCH PREFIX>");
-		exit(1);
-	}
-
-	/* Open file */
-	FILE *input_file;
-
-	input_file = fopen(argv[1], "r");
-
-	if (input_file == NULL)
-	{
-		printf("%s", "ERROR: File failed to open correctly.");
+		printf("%s", "SYNTAX ERROR: sys_parser.exe {strings | floss} <ABSOLUTE PATH TO INPUT FILE> <SEARCH PREFIX>");
 		exit(1);
 	}
 
 	/* Declare variables */
-	char dump[50];							// 'fgets' dump
-	char *search_term;						// pointer to the 'argv[2]' prefix-search
+	char *search_term = (char *)malloc(sizeof(argv[3]));
+	char cmd[100];
+	char dump[50];
 	
+	FILE *cmd_ptr;
 
-	/* Read file */
-	if (!strcmp(argv[2], "-api"))
+	/* Construct command */
+	strncpy(cmd, argv[1], strlen(argv[1]) + 1);
+	strcat(cmd, " \"");
+	strcat(cmd, argv[2]);
+	strcat(cmd, "\"");
+
+	cmd_ptr = popen(cmd, "r");
+
+	/* Check for successful command execution */
+	if (cmd_ptr == NULL)
 	{
-		// Iterate over each line in input file		
-		while (fgets(dump, sizeof(dump), input_file) != 0)
+		printf("%s\n", "Error: Command failed to run.");
+		exit(1);
+	}
+
+
+	/* Parse output */
+	if (!strcmp(argv[3], "-api"))
+	{
+		// Iterate over each line in output
+		while (fgets(dump, sizeof(dump), cmd_ptr) != 0)
 		{
 			// Removes '\n' if exists
 			if(dump[strlen(dump) - 1] == '\n')
@@ -55,17 +62,17 @@ int main(int argc, char *argv[])
 			}
 		}
 
-		/* Close file */
-		fclose(input_file);
+		/* Close sys connection */
+		pclose(cmd_ptr);
 	}
 	else
 	{
 		/* Declare variables */
-		int slice_size = strlen(argv[2]);		// determine length of CMD-line search-term
+		int slice_size = strlen(argv[3]);		// determine length of CMD-line search-term
 		char sliced_string[slice_size + 1];		// sliced 'fgets' string dump
 		
 		// Iterate over each line in input file
-		while (fgets(dump, sizeof(dump), input_file) != 0)
+		while (fgets(dump, sizeof(dump), cmd_ptr) != 0)
 		{
 			// Removes '\n' if exists
 			if(dump[strlen(dump) - 1] == '\n')
@@ -75,7 +82,7 @@ int main(int argc, char *argv[])
 			
 			// Copy user input search term from each
 			strncpy(sliced_string, dump, slice_size);
-			search_term = strstr(sliced_string, argv[2]);
+			search_term = strstr(sliced_string, argv[3]);
 			
 			// Print, if match
 			if (search_term != NULL)
@@ -84,10 +91,9 @@ int main(int argc, char *argv[])
 			}
 		}
 
-		/* Close file */
-		fclose(input_file);
+		/* Close sys connection */
+		pclose(cmd_ptr);
 	}
-
 
 	return 0;
 }
